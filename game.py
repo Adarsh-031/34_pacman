@@ -54,10 +54,11 @@ def hud_flashing():
     now = pygame.time.get_ticks()
     return now < _hud_flash_until and (now // 150) % 2 == 0
 
+BONUS_LIFE_EVERY = 1000
+
 def bonus_life_threshold():
     """Return a score value at which the player earns an extra life, or None to disable bonus lives."""
-    pass
-
+    return BONUS_LIFE_EVERY
 
 def is_wall(cell):
     row, col = cell
