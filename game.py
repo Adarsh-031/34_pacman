@@ -41,10 +41,18 @@ def ghost_color(name, mode):
         return FRIGHTENED_TINTS.get(name)
     return None
 
+HUD_FLASH_MS = 1500
+_hud_flash_until = 0
+
 def on_pellet_eaten(score, pellets_left):
     """Called after every pellet is eaten; add sound, flashes, or bonus fruit here."""
-    pass
+    global _hud_flash_until
+    if pellets_left == 0:
+        _hud_flash_until = pygame.time.get_ticks() + HUD_FLASH_MS
 
+def hud_flashing():
+    now = pygame.time.get_ticks()
+    return now < _hud_flash_until and (now // 150) % 2 == 0
 
 def bonus_life_threshold():
     """Return a score value at which the player earns an extra life, or None to disable bonus lives."""
@@ -247,7 +255,8 @@ class Game:
                 pygame.draw.rect(screen, color, (gx - TILE // 2 + 3, gy - 2, TILE - 6, TILE // 2 - 2))
                 pygame.draw.circle(screen, (255, 255, 255), (gx - 4, gy - 4), 3)
                 pygame.draw.circle(screen, (255, 255, 255), (gx + 4, gy - 4), 3)
-        hud = font.render(f"Score {self.score}   Lives {self.lives}   R = reset", True, (240, 240, 240))
+        hud_color = (255, 220, 40) if hud_flashing() else (240, 240, 240)
+        hud = font.render(f"Score {self.score}   Lives {self.lives}   R = reset", True, hud_color)
         screen.blit(hud, (8, ROWS * TILE + 6))
         if self.state != "play":
             text = "YOU WIN! Press R" if self.state == "win" else "GAME OVER - Press R"
