@@ -28,11 +28,18 @@ PLAYER_START = (11, 10)
 FRIGHT_SECONDS = 3.0
 PLAYER_STEP, GHOST_STEP = 0.14, 0.17
 
+FRIGHTENED_TINTS = {
+    "blinky": (90, 60, 255),    # indigo
+    "pinky":  (160, 70, 230),   # violet
+    "inky":   (30, 140, 255),   # azure
+    "clyde":  (70, 100, 190),   # slate blue
+}
 
 def ghost_color(name, mode):
     """Return an (r, g, b) colour override for a ghost, or None to keep the default."""
-    pass
-
+    if mode == "frightened":
+        return FRIGHTENED_TINTS.get(name)
+    return None
 
 def on_pellet_eaten(score, pellets_left):
     """Called after every pellet is eaten; add sound, flashes, or bonus fruit here."""
